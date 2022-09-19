@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import _ from "lodash";
+import axios from "axios";
 import { Cats } from "./Cats";
-import Axios from "axios";
 
 class App extends Component {
   state = {
@@ -9,9 +8,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const { data: users } = await Axios.get(
-      "https://gist.githubusercontent.com/medibank-digital/a1fc81a93200a7b9d5f8b7eae0fac6f8/raw/de10a4fcf717e6c431e88c965072c784808fd6b2/people.json"
-    );
+    const { data: users } = await axios.get(apiEndpoint);
     this.setState({ users });
   }
 
@@ -51,3 +48,6 @@ class App extends Component {
 }
 
 export default App;
+
+const apiEndpoint =
+  "https://gist.githubusercontent.com/medibank-digital/a1fc81a93200a7b9d5f8b7eae0fac6f8/raw/de10a4fcf717e6c431e88c965072c784808fd6b2/people.json";

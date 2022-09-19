@@ -1,7 +1,7 @@
 import { orderBy } from "lodash";
 export function Cats({ cats }) {
-  // console.log(cats);
-
   const orderedCats = orderBy(cats, ["name"]);
-  return orderedCats.map((cat) => <h3 key={cat.name}>Pet Name: {cat.name}</h3>);
+  return orderedCats.map((cat, index) => (
+    <h3 key={cat.name + index}>Pet Name: {cat.name}</h3>
+  ));
 }
