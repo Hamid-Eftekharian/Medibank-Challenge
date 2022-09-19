@@ -1,44 +1,51 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import Users from "./services/service.json";
+import { Cats } from "./Cats";
+import Axios from "axios";
 
 class App extends Component {
   state = {
     users: [],
   };
 
-  componentDidMount() {
-    this.setState({ users: Users });
+  async componentDidMount() {
+    const { data: users } = await Axios.get(
+      "https://gist.githubusercontent.com/medibank-digital/a1fc81a93200a7b9d5f8b7eae0fac6f8/raw/de10a4fcf717e6c431e88c965072c784808fd6b2/people.json"
+    );
+    this.setState({ users });
   }
 
   render() {
-    const filteredUsers = this.state.users.filter(
-      (item) => _.get(item, pets.type) === "Cat"
-    );
+    const users = this.state.users;
 
-    const sortedUsers = _.orderBy(filteredUsers, ["gender", "pets.type"]);
+    function getCatsByOwnerGender(gender) {
+      const filteredCats = [];
+      users
+        .filter((item) => item.gender === gender)
+        .map((item) => {
+          const pets = item.pets;
+          if (pets !== null) {
+            pets.forEach((pet) => {
+              if (pet.type === "Cat") {
+                filteredCats.push(pet);
+              }
+            });
+          }
+        });
+      return filteredCats;
+    }
 
     return (
-      <div>
-        <h1>Female</h1>
-        <ul>
-          :
-          {sortedUsers
-            .filter((i) => i.gender === "Female")
-            .map((item) => (
-              <li key={item.pets.name}>Pet Name: {item.pets.name}</li>
-            ))}
-        </ul>
-        <h1>Male</h1>
-        <ul>
-          :
-          {sortedUsers
-            .filter((i) => i.gender === "Male")
-            .map((item) => (
-              <li key={item.pets.name}>Pet Name: {item.pets.name}</li>
-            ))}
-        </ul>
-      </div>
+      <>
+        <div>
+          <h1>Male</h1>
+          <Cats cats={getCatsByOwnerGender("Male")} />
+        </div>
+        <div>
+          <h1>Female</h1>
+          <Cats cats={getCatsByOwnerGender("Female")} />
+        </div>
+      </>
     );
   }
 }
